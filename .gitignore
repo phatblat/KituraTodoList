@@ -1,13 +1,17 @@
+# macOS
 .DS_Store
-/.build
-/Packages
-/*.xcodeproj
 
-/.gradle/
-.DS_Store
+# Xcode
+/*.xcodeproj
 *.xccheckout
 *.xcscmblueprint
 xcuserdata
+
+# SwiftPM
+/.build
+/Packages
+
+/.gradle/
 Carthage/
 Pods/
 .rubygems/
