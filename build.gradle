@@ -157,7 +157,9 @@ task spm {
     dependsOn spmDescribe
     dependsOn spmDependencies
     dependsOn spmFetchDependencies
+    dependsOn xcodeGenerate
     dependsOn swiftBuild
+    swiftBuild.mustRunAfter xcodeGenerate
     // TEMP: SPM disabled due to issues with Quick tests
     //dependsOn swiftTest
 }
