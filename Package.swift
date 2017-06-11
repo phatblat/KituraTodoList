@@ -19,5 +19,6 @@ let package = Package(
         .testTarget(
             name: "KituraTodoListTests",
             dependencies: ["KituraTodoList"]),
-    ]
+    ],
+    swiftLanguageVersions: [4]
 )
