@@ -1,0 +1,171 @@
+/**
+ * build.gradle
+ * KituraTodoList
+ */
+
+buildscript {
+    repositories {
+        maven { url('http://repository.openbakery.org/') }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'org.openbakery', name: 'xcode-plugin', version: '+'
+    }
+}
+
+String taskGroup = 'zzz Kitura'
+
+ext {
+    if (project.hasProperty('verbose')) {
+        verbose = project.verbose.toBoolean()
+    } else {
+        verbose = false
+    }
+
+    xcodePath = 'env DEVELOPER_DIR=/Applications/Xcode-9.app '
+}
+
+if (System.env.JENKINS_URL) {
+    println "Running on jenkins"
+    ext.verbose = true
+}
+
+/* xcodePlugin */
+
+apply plugin: 'org.openbakery.xcode-plugin'
+
+xcodebuild {
+    version = '9'
+    type = 'macOS'
+    scheme = 'Butler'
+    target = 'Butler'
+    // https://github.com/openbakery/gradle-xcodePlugin/issues/361
+    bundleName = 'Butler'
+}
+
+task xcodeVersion(type: Exec) {
+    description 'Prints the version of Xcode used by the build.'
+    group taskGroup
+    String command =  xcodePath + 'xcodebuild -version'
+    commandLine command.tokenize()
+}
+
+/* Bundler */
+
+task bundleInstall(type: Exec) {
+    description 'Installs ruby gems using Bundler.'
+    group taskGroup
+    String command = 'bundle install'
+    if (!verbose) {
+        command += ' --quiet'
+    }
+    commandLine command.tokenize()
+}
+
+/* CocoaPods */
+
+task podLibLint(type: Exec) {
+    description 'Builds and lints the library as a CocoaPods.'
+    group taskGroup
+    dependsOn bundleInstall
+    String command = xcodePath + 'bundle exec pod lib lint'
+    if (verbose) {
+        command += ' --verbose'
+    }
+    commandLine command.tokenize()
+}
+
+/* Swift Package Manager */
+
+task xcodeGenerate(type: Exec) {
+    description '(Re)generates the Xcode project based on the Swift package definition.'
+    group taskGroup
+    description 'Generates an Xcode project'
+    // TODO: Add --xcconfig-overrides Config/Universal.xcconfig
+    String command = xcodePath + 'swift package -Xlinker -framework -Xlinker XCTest generate-xcodeproj'
+    commandLine command.tokenize()
+}
+
+task spmClean(type: Exec) {
+    description 'Cleans the Swift package .build directory.'
+    group taskGroup
+    String command = xcodePath + 'swift package reset'
+    commandLine command.tokenize()
+}
+
+task spmDescribe(type: Exec) {
+    description 'Shows a summary of the Swift package.'
+    group taskGroup
+    String command = xcodePath + 'swift package describe'
+    commandLine command.tokenize()
+}
+
+task spmDependencies(type: Exec) {
+    description 'Shows dependencies of the Swift package.'
+    group taskGroup
+    String command = xcodePath + 'swift package show-dependencies'
+    commandLine command.tokenize()
+}
+
+task spmFetchDependencies(type: Exec) {
+    description 'Downloads dependencies.'
+    group taskGroup
+    String command = xcodePath + 'swift package resolve'
+    commandLine command.tokenize()
+}
+
+task swiftBuild(type: Exec) {
+    description 'Builds the library using the swift compiler.'
+    group taskGroup
+    String command = xcodePath + 'swift build'
+    if (verbose) {
+        command += ' --verbose'
+    }
+    commandLine command.tokenize()
+}
+
+task swiftTest(type: Exec) {
+    description 'Runs the tests (broken).'
+    group taskGroup
+    String command = xcodePath + 'swift test'
+    if (verbose) {
+        command += ' --verbose'
+    }
+    commandLine command.tokenize()
+}
+
+/* Top-Level Tasks for CI */
+
+task xcode {
+    description 'Builds and runs tests using xcodebuild.'
+    group taskGroup
+    tasks.getByName('cocoapodsInstall').dependsOn bundleInstall
+    tasks.getByName('xcodebuild').dependsOn spmFetchDependencies
+    dependsOn 'build'
+    dependsOn 'test'
+}
+
+task cocoapods {
+    description 'Builds and lints the library as a CocoaPod.'
+    group taskGroup
+    dependsOn podLibLint
+}
+
+task spm {
+    description 'Builds and runs tests using the Swift Package Manager.'
+    group taskGroup
+    dependsOn spmDescribe
+    dependsOn spmDependencies
+    dependsOn spmFetchDependencies
+    dependsOn swiftBuild
+    // TEMP: SPM disabled due to issues with Quick tests
+    //dependsOn swiftTest
+}
+
+task buildAll {
+    description 'Runs all types of builds.'
+    group taskGroup
+    dependsOn xcode
+    dependsOn cocoapods
+    dependsOn spm
+}
