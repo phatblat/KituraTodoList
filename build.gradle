@@ -93,6 +93,13 @@ task spmClean(type: Exec) {
     commandLine command.tokenize()
 }
 
+task spmUpdate(type: Exec) {
+    description 'Updates dependencies of the swift package.'
+    group taskGroup
+    String command = xcodePath + 'swift package update'
+    commandLine command.tokenize()
+}
+
 task spmDescribe(type: Exec) {
     description 'Shows a summary of the Swift package.'
     group taskGroup
