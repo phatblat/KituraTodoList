@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "KituraTodoList",
     products: [
-        .library(
+        .executable(
             name: "KituraTodoList",
             targets: ["KituraTodoList"]),
     ],
