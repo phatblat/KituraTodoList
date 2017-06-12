@@ -1,7 +1,87 @@
 {
   "object": {
     "pins": [
-
+      {
+        "package": "CCurl",
+        "repositoryURL": "https://github.com/IBM-Swift/CCurl.git",
+        "state": {
+          "branch": null,
+          "revision": "3cfb7521cf0bb77a2de8f9fe9ca0651360b40973",
+          "version": "0.2.3"
+        }
+      },
+      {
+        "package": "HeliumLogger",
+        "repositoryURL": "https://github.com/IBM-Swift/HeliumLogger.git",
+        "state": {
+          "branch": null,
+          "revision": "9b310ce5d126580028de665c914578d58e34b8ac",
+          "version": "1.7.0"
+        }
+      },
+      {
+        "package": "Kitura",
+        "repositoryURL": "https://github.com/IBM-Swift/Kitura.git",
+        "state": {
+          "branch": null,
+          "revision": "bcae960e70ce7de774a5e50795e7b201efa21a75",
+          "version": "1.7.4"
+        }
+      },
+      {
+        "package": "Kitura-TemplateEngine",
+        "repositoryURL": "https://github.com/IBM-Swift/Kitura-TemplateEngine.git",
+        "state": {
+          "branch": null,
+          "revision": "c209801c7d53c347750d063e8950cb2ccbf6ed2b",
+          "version": "1.7.1"
+        }
+      },
+      {
+        "package": "Kitura-net",
+        "repositoryURL": "https://github.com/IBM-Swift/Kitura-net.git",
+        "state": {
+          "branch": null,
+          "revision": "e14388dd26a1639793d7f49c8ea26fa8686056cb",
+          "version": "1.7.8"
+        }
+      },
+      {
+        "package": "LoggerAPI",
+        "repositoryURL": "https://github.com/IBM-Swift/LoggerAPI.git",
+        "state": {
+          "branch": null,
+          "revision": "51bca3a997a299ab7291c62bf91ec9c8e299f42a",
+          "version": "1.7.0"
+        }
+      },
+      {
+        "package": "SSLService",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
+        "state": {
+          "branch": null,
+          "revision": "59651ae41165abe8a9f2035db5515c129e361f49",
+          "version": "0.12.43"
+        }
+      },
+      {
+        "package": "Socket",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
+        "state": {
+          "branch": null,
+          "revision": "21f3abdf658e73b44b5cef658661fa8aea506930",
+          "version": "0.12.53"
+        }
+      },
+      {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/IBM-Swift/SwiftyJSON.git",
+        "state": {
+          "branch": null,
+          "revision": "d5f2741e9293775d3b245a4c07fd3d2435b630d9",
+          "version": "16.0.0"
+        }
+      }
     ]
   },
   "version": 1
