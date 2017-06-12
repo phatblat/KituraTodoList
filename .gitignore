@@ -11,7 +11,11 @@ xcuserdata
 /.build
 /Packages
 
+# Gradle
 /.gradle/
+/gradlew.bat
+/build
+
 Carthage/
 Pods/
 .rubygems/
