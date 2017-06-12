@@ -50,31 +50,6 @@ task xcodeVersion(type: Exec) {
     commandLine command.tokenize()
 }
 
-/* Bundler */
-
-task bundleInstall(type: Exec) {
-    description 'Installs ruby gems using Bundler.'
-    group taskGroup
-    String command = 'bundle install'
-    if (!verbose) {
-        command += ' --quiet'
-    }
-    commandLine command.tokenize()
-}
-
-/* CocoaPods */
-
-task podLibLint(type: Exec) {
-    description 'Builds and lints the library as a CocoaPods.'
-    group taskGroup
-    dependsOn bundleInstall
-    String command = xcodePath + 'bundle exec pod lib lint'
-    if (verbose) {
-        command += ' --verbose'
-    }
-    commandLine command.tokenize()
-}
-
 /* Swift Package Manager */
 
 task xcodeGenerate(type: Exec) {
@@ -160,17 +135,11 @@ task swiftTest(type: Exec) {
 task xcode {
     description 'Builds and runs tests using xcodebuild.'
     group taskGroup
-    tasks.getByName('cocoapodsInstall').dependsOn bundleInstall
     tasks.getByName('xcodebuild').dependsOn spmFetchDependencies
+    tasks.getByName('xcodebuild').dependsOn xcodeGenerate
     dependsOn xcodeVersion
     dependsOn 'build'
     dependsOn 'test'
-}
-
-task cocoapods {
-    description 'Builds and lints the library as a CocoaPod.'
-    group taskGroup
-    dependsOn podLibLint
 }
 
 task spm {
@@ -182,7 +151,6 @@ task spm {
     dependsOn spmDescribe
     dependsOn spmDependencies
     dependsOn spmFetchDependencies
-    dependsOn xcodeGenerate
     dependsOn swiftBuild
     swiftBuild.mustRunAfter xcodeGenerate
     // TEMP: SPM disabled due to issues with Quick tests
@@ -193,6 +161,5 @@ task buildAll {
     description 'Runs all types of builds.'
     group taskGroup
     dependsOn xcode
-    dependsOn cocoapods
     dependsOn spm
 }
