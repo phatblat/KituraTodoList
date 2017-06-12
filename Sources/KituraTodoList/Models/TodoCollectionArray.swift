@@ -29,7 +29,7 @@ class TodoCollectionArray {
 // MARK: - TodoCollection
 extension TodoCollectionArray: TodoCollection {
 
-    static func serialize(items: [TodoItem]) -> [JSONDictionary] {
+    static func serialize(_ items: [TodoItem]) -> [JSONDictionary] {
         return items.map { $0.serialize() }
     }
 
