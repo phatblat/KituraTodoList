@@ -37,10 +37,10 @@ apply plugin: 'org.openbakery.xcode-plugin'
 xcodebuild {
     version = '9'
     type = 'macOS'
-    scheme = 'Butler'
-    target = 'Butler'
+    scheme = 'KituraTodoList-Package'
+    target = 'KituraTodoList'
     // https://github.com/openbakery/gradle-xcodePlugin/issues/361
-    bundleName = 'Butler'
+    bundleName = 'KituraTodoList'
 }
 
 task xcodeVersion(type: Exec) {
