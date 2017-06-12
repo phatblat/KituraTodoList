@@ -17,7 +17,9 @@ let package = Package(
     targets: [
         .target(
             name: "KituraTodoList",
-            dependencies: []),
+            dependencies: [
+                "Kitura",
+            ]),
         .testTarget(
             name: "KituraTodoListTests",
             dependencies: ["KituraTodoList"]),
