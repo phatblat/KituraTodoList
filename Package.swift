@@ -11,6 +11,8 @@ let package = Package(
             targets: ["KituraTodoList"]),
     ],
     dependencies: [
+      .package(url: "https://github.com/IBM-Swift/Kitura.git", from: "1.7.0"),
+      .package(url: "https://github.com/IBM-Swift/HeliumLogger.git",  from: "1.6.1"),
     ],
     targets: [
         .target(
