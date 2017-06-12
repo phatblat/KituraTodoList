@@ -6,52 +6,91 @@
 //
 //
 
+import HeliumLogger
+import LoggerAPI
 import Foundation
 
-// https://github.com/IBM-Swift/Kitura-redis
-// https://github.com/IBM-Swift/Kitura-CouchDB
-private var _collection = [String: TodoItem]()
+class TodoCollectionArray {
+    // https://github.com/IBM-Swift/Kitura-redis
+    // https://github.com/IBM-Swift/Kitura-CouchDB
+    fileprivate var _collection = [String: TodoItem]()
 
-let writingQueue = DispatchQueue(label: "writingQueue", qos: .userInitiated, attributed: .concurrent)
-let semaphore = DispatchSemaphore(value: 1)
+    let writingQueue = DispatchQueue(label: "writingQueue", qos: .userInitiated, attributes: .concurrent)
+    let semaphore = DispatchSemaphore(value: 1)
 
-func add(title: String, order: Int, completed: Bool) -> TodoItem {
+    let baseURL: String = ""
+    var idCounter: Int = 0
 
-    var original: String
-    original = String(self.idCounter)
-
-    let newItem = TodoItem(id: original,
-                           order: order,
-                           title: title,
-                           completed: false,
-                           url: self.baseURL + "/" + original
-    )
-
-    writingQueue.sync() {
-
-        semaphore.wait()
-        self.idCounter+=1
-        self._collection[original] = newItem
-        semaphore.signal()
-
-    }
-
-    Log.info("Added \(title)")
-    
-    return newItem
-    
-}
-
-func delete(id: String) {
-    writingQueue.sync() {
-        semaphore.wait()
-        self._collection.removeValueForKey(id)
-        semaphore.signal()
+    init() {
+        HeliumLogger.use()
     }
 }
 
-static func serialize(items: [TodoItem]) -> [JSONDictionary] {
-    return items.map { $0.serialize() }
+// MARK: - TodoCollection
+extension TodoCollectionArray: TodoCollection {
+
+    static func serialize(items: [TodoItem]) -> [JSONDictionary] {
+        return items.map { $0.serialize() }
+    }
+
+    var count: Int {
+        return _collection.count
+    }
+
+    func clear() {
+        _collection = [:]
+    }
+
+    func getAll() -> [TodoItem] {
+        return _collection.map { return $0.1 }
+    }
+
+    func add(title: String, order: Int, completed: Bool) -> TodoItem {
+
+        var original: String
+        original = String(idCounter)
+
+        let newItem = TodoItem(id: original,
+                               order: order,
+                               title: title,
+                               completed: false,
+                               url: baseURL + "/" + original
+        )
+
+        writingQueue.sync() {
+
+            semaphore.wait()
+            idCounter += 1
+            _collection[original] = newItem
+            semaphore.signal()
+
+        }
+
+        Log.info("Added \(title)")
+        
+        return newItem
+        
+    }
+
+    func update(id: String, title: String?, order: Int?, completed: Bool?) -> TodoItem? {
+        var item: TodoItem?
+        writingQueue.sync() {
+            semaphore.wait()
+            item = _collection[id]
+            item?.title = title!
+            item?.order = order!
+            semaphore.signal()
+        }
+
+        return item
+    }
+
+    func delete(id: String) {
+        writingQueue.sync() {
+            semaphore.wait()
+            _collection.removeValue(forKey: id)
+            semaphore.signal()
+        }
+    }
+
 }
-
-
