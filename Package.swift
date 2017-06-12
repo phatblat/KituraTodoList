@@ -18,6 +18,7 @@ let package = Package(
         .target(
             name: "KituraTodoList",
             dependencies: [
+                "HeliumLogger",
                 "Kitura",
             ]),
         .testTarget(
