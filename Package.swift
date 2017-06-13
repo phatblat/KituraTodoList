@@ -6,9 +6,8 @@ import PackageDescription
 let package = Package(
     name: "KituraTodoList",
     products: [
-        .executable(
-            name: "KituraTodoList",
-            targets: ["KituraTodoList"]),
+        .executable(name: "KituraTodoList", targets: ["KituraTodoList"]),
+        .library(name: "KituraTodoListCore", targets: ["KituraTodoListCore"]),
     ],
     dependencies: [
       .package(url: "https://github.com/IBM-Swift/Kitura.git", from: "1.7.0"),
@@ -16,14 +15,21 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "KituraTodoList",
+            name: "KituraTodoListCore",
             dependencies: [
                 "HeliumLogger",
                 "Kitura",
             ]),
+        .target(
+            name: "KituraTodoList",
+            dependencies: [
+                .target(name: "KituraTodoListCore"),
+            ]),
         .testTarget(
             name: "KituraTodoListTests",
-            dependencies: ["KituraTodoList"]),
+            dependencies: [
+                .target(name: "KituraTodoListCore"),
+            ]),
     ],
     swiftLanguageVersions: [4]
 )

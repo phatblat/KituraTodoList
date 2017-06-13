@@ -1,5 +1,4 @@
-//@testable
-import KituraTodoList
+import KituraTodoListCore
 import XCTest
 
 class KituraTodoListTests: XCTestCase {

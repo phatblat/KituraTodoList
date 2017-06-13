@@ -8,14 +8,14 @@
 
 import Foundation
 
-struct TodoItem {
-    var id: String
+public struct TodoItem {
+    public var id: String
     var order: Int
     var title: String
     var completed: Bool
     var url: String
 
-    init(id: String = "", order: Int = 0, title: String = "", completed: Bool = false,
+    public init(id: String = "", order: Int = 0, title: String = "", completed: Bool = false,
                 url: String = "") {
         self.id = id
         self.order = order
